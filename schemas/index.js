@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const { MONGO_ID, MONGO_PASSWORD, NODE_ENV } = process.env;
-const MONGO_URL = `mongodb//${MONGO_ID}:${MONGO_PASSWORD}@localhost:27017/admin`;
+const MONGO_URL = `mongodb://localhost:27017/gifchat`;
 
 const connect = () => {
 	if (NODE_ENV !== "production") {
@@ -12,7 +12,7 @@ const connect = () => {
 		{
 			dbName: "gifchat",
 			useNewUrlParser: true,
-			useCreateIndex: true,
+			// useCreateIndex: true,
 		},
 		(error) => {
 			if (error) {
@@ -23,3 +23,5 @@ const connect = () => {
 		},
 	);
 };
+
+module.exports = connect;

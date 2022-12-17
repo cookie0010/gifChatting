@@ -20,24 +20,23 @@ nunjucks.configure("views", {
 	watch: true,
 });
 
-connect; // mongodb 연결
+connect(); // mongodb 연결
 
+const sessionMiddleware = session({
+	resave: false,
+	saveUninitialized: false,
+	secret: process.env.COOKIE_SECRET,
+	cookie: {
+		httpOnly: true,
+		secure: false,
+	},
+});
 app.use(morgan("dev"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(
-	session({
-		resave: false,
-		saveUninitialized: false,
-		secret: process.env.COOKIE_SECRET,
-		cookie: {
-			httpOnly: true,
-			secure: false,
-		},
-	}),
-);
+app.use(sessionMiddleware);
 
 // 이 부분이 채팅방에서 추가로 들어가는 부분
 app.use((req, res, next) => {
@@ -67,4 +66,4 @@ const server = app.listen(app.get("port"), () => {
 	console.log(app.get("port"), "번 포트에서 대기중");
 });
 
-webSocket(server, app);
+webSocket(server, app, sessionMiddleware);
